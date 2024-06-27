@@ -1,10 +1,8 @@
 @import './base.scss';
 
-#app {
-  // max-width: 1216px;
-  // margin: 0 auto;
-  /* padding: 2rem; */
-  /* font-weight: normal; */
+.container {
+  max-width: 1216px;
+  margin: 0 auto;
 }
 
 a {
@@ -25,12 +23,16 @@ h4 {
 
 h2 {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 h3 {
   font-size: 16px;
-  font-weight: 600;
+}
+
+h3,
+h4 {
+  font-weight: 500;
 }
 
 table {
@@ -43,21 +45,6 @@ tr {
   padding-left: 16px;
 }
 
-// @media (hover: hover) {
-//   a:hover {
-//     background-color: #363e77;
-//   }
-// }
-
-// @media (min-width: 1024px) {
-/* body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  } */
-// }
+.description {
+  color: #1d245280;
+}
