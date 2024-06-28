@@ -28,5 +28,9 @@ import Navigation from './TheNavigation.vue';
 
     padding: 4px 16px 4px 24px;
   }
+
+  @media (max-width: 960px) {
+    font-size: 14px;
+  }
 }
 </style>
