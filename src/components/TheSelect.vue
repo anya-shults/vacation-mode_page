@@ -13,7 +13,7 @@ const emits = defineEmits(['getUser', 'removeUser']);
 
 let isLoading = ref(true);
 let isActive = ref(false);
-let inputText = ref();
+let inputText = ref('');
 let userList = ref([]);
 let dropdownPosition = ref('bottom');
 
