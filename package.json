@@ -11,6 +11,10 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^8.8.0",
+    "axios": "^1.7.2",
+    "lodash.debounce": "^4.0.8",
+    "pinia": "^2.1.7",
     "vue": "^3.4.29"
   },
   "devDependencies": {
@@ -20,6 +24,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
     "prettier": "^3.2.5",
+    "sass": "^1.77.6",
     "vite": "^5.3.1",
     "vite-plugin-vue-devtools": "^7.3.1"
   }
