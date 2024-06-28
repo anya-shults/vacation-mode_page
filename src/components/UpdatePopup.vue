@@ -51,6 +51,10 @@ defineEmits(['close']);
 
   box-shadow: 3px 3px 22px #00000017;
 
+  @media (max-width: 500px) {
+    width: 80%;
+  }
+
   &__icon {
     padding: 11px 9px;
 

@@ -195,6 +195,10 @@ watch(inputText, getFoundUsers);
 
     cursor: pointer;
 
+    @media (max-width: 596px) {
+      width: 100%;
+    }
+
     &::placeholder {
       color: #1d245240;
       opacity: 1;

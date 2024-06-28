@@ -64,5 +64,9 @@ import IconOnboarding from './icons/IconOnboarding.vue';
       background-color: #9398c333;
     }
   }
+
+  @media (max-width: 880px) {
+    display: none;
+  }
 }
 </style>

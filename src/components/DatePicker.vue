@@ -58,6 +58,10 @@ watch(date, () => {
 <style lang="scss">
 .datepicker {
   width: 285px;
+
+  @media (max-width: 596px) {
+    width: 100%;
+  }
 }
 
 .dp-font-family {
