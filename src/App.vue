@@ -70,6 +70,7 @@ const handlePopstate = () => {
     const confirmationMessage =
       'У вас залишились незбережені зміни. ' +
       'Ви впевнені, що хочете залишити цю сторінку?';
+
     const userResponse = confirm(confirmationMessage);
 
     if (!userResponse) {
@@ -162,8 +163,8 @@ watch(backupApprovers, () => {
 
   if (backupApprovers.approvers.length === backupApproversLength) {
     const approvers = toRaw(backupApprovers.approvers);
-
     request.backupApprovers = approvers;
+
     return;
   }
 
@@ -175,6 +176,7 @@ watch(request, () => {
 
   if (isResponseReady) {
     enabled.value = true;
+
     return;
   }
 
@@ -206,10 +208,10 @@ onBeforeUnmount(() => removeEventListeners());
               <a
                 :class="enabled ? 'form__button' : 'form__button--disabled'"
                 type="submit"
-                :disabled="enabled"
                 @click="handleSubmit"
               >
-                Update
+                <span v-if="!isLoading">Update</span>
+                <span v-else>Loading</span>
               </a>
 
               <div class="form__tooltip-wrapper">
@@ -311,7 +313,7 @@ onBeforeUnmount(() => removeEventListeners());
 
     background-color: #1c2452;
 
-    transition: 300ms background-color;
+    transition: 300ms all;
 
     &-wrapper {
       &:hover .form__tooltip-wrapper {
@@ -323,7 +325,7 @@ onBeforeUnmount(() => removeEventListeners());
     }
 
     &--disabled {
-      transition: 300ms background-color;
+      transition: 300ms all;
 
       background-color: #9398c3;
       border-radius: 20px;
@@ -335,7 +337,7 @@ onBeforeUnmount(() => removeEventListeners());
     }
 
     &:hover {
-      transition: 300ms background-color;
+      transition: 300ms all;
 
       background-color: #162384;
       cursor: pointer;

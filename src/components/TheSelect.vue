@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import debounce from 'lodash.debounce';
 import IconChevronFillBottom from './icons/IconChevronFillBottom.vue';
 import { searchUser } from '@/api/users';
@@ -7,20 +7,22 @@ import { searchUser } from '@/api/users';
 defineProps({
   isTable: Boolean,
   selectLabel: String,
-  inputValue: String,
 });
 
 const emits = defineEmits(['getUser', 'removeUser']);
 
 let isLoading = ref(true);
 let isActive = ref(false);
-let inputText = ref('');
+let inputText = ref();
 let userList = ref([]);
+let dropdownPosition = ref('bottom');
 
 const select = ref(null);
+const dropdown = ref(null);
 
 const handleLinkClick = (user) => {
   inputText.value = user.email;
+
   emits('getUser', user);
 };
 
@@ -52,6 +54,32 @@ const getFoundUsers = debounce(async () => {
   }
 }, 200);
 
+const adjustDropdownPosition = () => {
+  if (select.value && dropdown.value) {
+    const selectRect = select.value.getBoundingClientRect();
+    const dropdownHeight = 200;
+    const viewportHeight = window.innerHeight;
+
+    if (selectRect.bottom + dropdownHeight > viewportHeight) {
+      dropdownPosition.value = 'top';
+
+      return;
+    }
+
+    dropdownPosition.value = 'bottom';
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('resize', adjustDropdownPosition);
+
+  watch(isActive, adjustDropdownPosition);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', adjustDropdownPosition);
+});
+
 watch(inputText, getFoundUsers);
 </script>
 
@@ -61,7 +89,9 @@ watch(inputText, getFoundUsers);
       v-if="selectLabel"
       :for="`select-${selectLabel}`"
       class="select__label"
-      >{{ selectLabel }} <span>*</span>
+    >
+      {{ selectLabel }}
+      <span>*</span>
     </label>
 
     <input
@@ -82,31 +112,50 @@ watch(inputText, getFoundUsers);
     />
 
     <div
-      :class="
+      :class="[
         isTable
           ? 'select__dropdown-wrapper--is-table'
-          : 'select__dropdown-wrapper'
-      "
+          : 'select__dropdown-wrapper',
+        {
+          'select__dropdown-wrapper--is-table--top':
+            isTable && dropdownPosition === 'top',
+        },
+      ]"
+      ref="dropdown"
     >
       <div class="dropdown" v-if="isActive && inputText.length">
         <div
-          :class="isTable ? 'dropdown__empty--is-table' : 'dropdown__empty'"
+          :class="[
+            isTable ? 'dropdown__empty--is-table' : 'dropdown__empty',
+            {
+              'dropdown__empty--is-table--top':
+                isTable && dropdownPosition === 'top',
+            },
+          ]"
           v-if="!userList.length"
         >
           <span v-if="isLoading">Loading...</span>
           <span v-else>No users found</span>
         </div>
+
         <ul class="dropdown__list" v-else>
           <li
-            :class="isTable ? 'dropdown__item--is-table' : 'dropdown__item'"
+            :class="[
+              isTable ? 'dropdown__item--is-table' : 'dropdown__item',
+              {
+                'dropdown__item--is-table--top':
+                  isTable && dropdownPosition === 'top',
+              },
+            ]"
             v-for="user in userList"
             :key="user.id"
           >
             <a
               :class="isTable ? 'dropdown__link--is-table' : 'dropdown__link'"
               @click="handleLinkClick(user)"
-              >{{ user.fullName }}</a
             >
+              {{ user.fullName }}
+            </a>
           </li>
         </ul>
       </div>
@@ -207,18 +256,31 @@ watch(inputText, getFoundUsers);
       box-shadow: 0 1px 2px #555b7d80;
       border-bottom-left-radius: 8px;
       border-bottom-right-radius: 8px;
+
+      &--top {
+        top: unset;
+        bottom: 39px;
+
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
     }
   }
 }
 
 .dropdown {
-  max-height: 350px;
+  max-height: 200px;
 
   overflow: auto;
 
   &__empty {
     background-color: #fff;
-    border: 1px solid #1d24524d;
+
+    border-top: 1px solid #1d24524d;
+    border-bottom: 1px solid #1d24524d;
+    border-bottom: 1px solid #1d24524d;
     border-radius: 8px;
 
     padding: 6px 8px;
@@ -226,12 +288,22 @@ watch(inputText, getFoundUsers);
 
     &--is-table {
       background-color: #fff;
-      border: 1px solid #1d24524d;
+
+      border-top: 1px solid #1d24524d;
+      border-bottom: 1px solid #1d24524d;
+
       border-bottom-left-radius: 8px;
       border-bottom-right-radius: 8px;
 
       padding: 11px 16px;
       color: #1d2452;
+
+      &--top {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
     }
   }
 
@@ -239,7 +311,8 @@ watch(inputText, getFoundUsers);
     background-color: #fff;
 
     &:first-child {
-      border: 1px solid #1d24524d;
+      border-top: 1px solid #1d24524d;
+      border-bottom: 1px solid #1d24524d;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
     }
@@ -251,18 +324,33 @@ watch(inputText, getFoundUsers);
 
     &--is-table {
       background-color: #fff;
-      border: 1px solid #1d24524d;
+
+      border-bottom: 1px solid #1d24524d;
+
+      &:first-child {
+        border-top: 1px solid #1d24524d;
+      }
 
       &:last-child {
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
       }
+
+      &--top {
+        &:last-child {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        &:first-child {
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+      }
     }
   }
 
   &__item:not(:first-child) {
-    border-left: 1px solid #1d24524d;
-    border-right: 1px solid #1d24524d;
     border-bottom: 1px solid #1d24524d;
   }
 

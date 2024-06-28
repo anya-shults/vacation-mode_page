@@ -26,6 +26,7 @@ const transition = {
 watch(date, () => {
   if (!date.value?.length) {
     emits('setDates', null, null);
+
     return;
   }
 
@@ -87,12 +88,7 @@ watch(date, () => {
   --dp-disabled-color: #f6f6f6;
   --dp-scroll-bar-background: #f3f3f3;
   --dp-scroll-bar-color: #1d2452;
-  --dp-success-color: #76d275;
-  --dp-success-color-disabled: #a3d9b1;
   --dp-icon-color: #1d2452;
-  --dp-danger-color: #ff6f60;
-  --dp-marker-color: #ff6f60;
-  --dp-tooltip-color: #fafafa;
   --dp-disabled-color-text: #8e8e8e;
   --dp-highlight-color: rgb(25 118 210 / 10%);
   --dp-range-between-dates-background-color: var(--dp-hover-color, #f3f3f3);
